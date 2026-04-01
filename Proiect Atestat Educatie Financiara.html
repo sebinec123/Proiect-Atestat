@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Educație Financiară pentru Tineri</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 285px;
+      background: #0f172a;
+      color: white;
+      padding: 24px 18px 30px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-bottom: 22px;
+    }
+    .menu-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.65;
+      margin: 18px 0 10px;
+    }
+    .menu button {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 10px;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+    .menu button:hover,
+    .menu button.active {
+      background: #2563eb;
+      transform: translateX(2px);
+    }
+    .main {
+      margin-left: 285px;
+      width: calc(100% - 285px);
+      padding: 30px;
+    }
+    .topbar {
+      background: linear-gradient(135deg, #1d4ed8, #0f172a);
+      color: white;
+      padding: 30px;
+      border-radius: 22px;
+      margin-bottom: 26px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .topbar h1 {
+      font-size: 2.1rem;
+      margin-bottom: 10px;
+    }
+    .topbar p {
+      max-width: 900px;
+      opacity: 0.96;
+    }
+    .topbar-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .quick-btn {
+      background: rgba(255,255,255,0.16);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+    .stat-card, .card, .calculator, .quiz-box, .timeline, .tips-box, .resource-box {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .stat-card h3 {
+      color: #1d4ed8;
+      margin-bottom: 8px;
+      font-size: 0.98rem;
+    }
+    .stat-card p {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #0f172a;
+    }
+    .page {
+      display: none;
+      animation: fadeIn 0.28s ease;
+    }
+    .page.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+      font-size: 1.95rem;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+    h3 {
+      color: #1d4ed8;
+      margin-bottom: 10px;
+    }
+    .section-intro {
+      margin-bottom: 18px;
+      color: #475569;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .highlight {
+      background: #dbeafe;
+      border-left: 6px solid #2563eb;
+      padding: 18px;
+      border-radius: 12px;
+      margin-top: 18px;
+    }
+    .mini-list li, ul li {
+      margin-bottom: 8px;
+    }
+    ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+    .calculator label, .quiz-box label, .resource-box label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+    .btn {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #1d4ed8;
+    }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+    .result {
+      margin-top: 14px;
+      font-weight: bold;
+    }
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .three-columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .table-box {
+      overflow-x: auto;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin-top: 18px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    th {
+      background: #eff6ff;
+      color: #1e3a8a;
+    }
+    .progress-wrap {
+      margin-top: 16px;
+    }
+    .progress-bar {
+      height: 14px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2563eb, #38bdf8);
+      transition: width 0.4s ease;
+    }
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .faq-item {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      padding: 18px;
+      margin-top: 14px;
+    }
+    .timeline-step {
+      border-left: 4px solid #2563eb;
+      padding-left: 14px;
+      margin-bottom: 18px;
+    }
+    .quote {
+      font-style: italic;
+      color: #334155;
+      margin-top: 8px;
+    }
+    .interlink-box {
+      margin-top: 20px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .interlink-box h4 {
+      color: #1e3a8a;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    .interlink-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .interlink-links button {
+      background: white;
+      color: #2563eb;
+      border: 1px solid #93c5fd;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .interlink-links button:hover {
+      background: #dbeafe;
+    }
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      color: #475569;
+      padding: 10px;
+    }
+    @media (max-width: 1100px) {
+      .two-columns, .three-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 930px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+      .layout {
+        flex-direction: column;
+      }
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo">💰 FinEdu Dashboard</div>
+      <div class="subtitle">Atestat - Educație financiară pentru tineri</div>
+
+      <div class="menu">
+        <div class="menu-title">Panou principal</div>
+        <button class="active" onclick="showPage('dashboard', this)">Dashboard</button>
+        <button onclick="showPage('despre', this)">Introducere</button>
+        <button onclick="showPage('importanta', this)">Importanța educației financiare</button>
+        <button onclick="showPage('notiuni', this)">Noțiuni de bază</button>
+        <button onclick="showPage('buget', this)">Buget personal</button>
+        <button onclick="showPage('economii', this)">Economii și obiective</button>
+        <button onclick="showPage('investitii', this)">Investiții pe înțelesul tuturor</button>
+        <button onclick="showPage('greseli', this)">Greșeli frecvente</button>
+        <button onclick="showPage('sfaturi', this)">Sfaturi utile</button>
+        <button onclick="showPage('calculator', this)">Calculator economii</button>
+        <button onclick="showPage('planner', this)">Planner buget</button>
+        <button onclick="showPage('quiz', this)">Quiz financiar</button>
+        <button onclick="showPage('faq', this)">Întrebări frecvente</button>
+                <button onclick="showPage('contact', this)">Mentorat</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Educație Financiară pentru Tineri</h1>
+        <p>Acest site a fost realizat pentru a prezenta, într-un mod clar și interactiv, noțiunile esențiale de educație financiară: gestionarea banilor, bugetul personal, economisirea, cheltuielile responsabile și luarea unor decizii financiare corecte încă din adolescență.</p>
+        <div class="topbar-actions">
+          <button class="quick-btn" onclick="goToPage('calculator')">Deschide calculatorul</button>
+          <button class="quick-btn" onclick="goToPage('quiz')">Testează-te</button>
+          <button class="quick-btn" onclick="goToPage('contact')">Contact mentorat</button>
+        </div>
+      </div>
+
+      <section id="dashboard" class="page active">
+        <h2>Dashboard principal</h2>
+        <p class="section-intro">Dashboard-ul reprezintă pagina principală a aplicației. De aici, utilizatorul poate naviga rapid către toate secțiunile informative și interactive ale site-ului.</p>
+
+        <div class="stats">
+          <div class="stat-card">
+            <h3>Teme educaționale</h3>
+            <p>8+</p>
+          </div>
+          <div class="stat-card">
+            <h3>Instrumente interactive</h3>
+            <p>4</p>
+          </div>
+          <div class="stat-card">
+            <h3>Public țintă</h3>
+            <p>Tineri</p>
+          </div>
+          <div class="stat-card">
+            <h3>Scop</h3>
+            <p>Învățare</p>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <div class="card">
+            <span class="badge">Scop</span>
+            <h3>Rolul site-ului</h3>
+            <p>Site-ul urmărește să explice noțiuni financiare într-un limbaj accesibil și să ajute elevii să înțeleagă mai bine cum se administrează banii în viața reală.</p>
+          </div>
+          <div class="card">
+            <span class="badge">Structură</span>
+            <h3>Organizare modernă</h3>
+            <p>Conținutul este împărțit pe pagini separate pentru o experiență clară, asemănătoare unei aplicații web moderne de tip dashboard.</p>
+          </div>
+          <div class="card">
+            <span class="badge">Interactivitate</span>
+            <h3>Funcții dinamice</h3>
+            <p>Utilizatorul poate calcula economii, poate simula un buget, își poate verifica cunoștințele și poate trimite o cerere de mentorat.</p>
+          </div>
+        </div>
+
+        <div class="two-columns">
+          <div class="timeline">
+            <h3>Ce găsești în platformă</h3>
+            <div class="timeline-step"><strong>Pasul 1:</strong> înțelegi noțiunile de bază despre bani, venituri și cheltuieli.</div>
+            <div class="timeline-step"><strong>Pasul 2:</strong> afli cum se construiește un buget personal simplu.</div>
+            <div class="timeline-step"><strong>Pasul 3:</strong> descoperi importanța economiilor și a obiectivelor financiare.</div>
+            <div class="timeline-step"><strong>Pasul 4:</strong> testezi cunoștințele prin instrumente interactive.</div>
+          </div>
+          <div class="card">
+            <h3>Mesaj cheie</h3>
+            <p>Educația financiară nu înseamnă doar bani. Ea înseamnă responsabilitate, planificare, autocontrol și pregătire pentru viitor.</p>
+            <p class="quote">„Obiceiurile financiare bune se formează devreme și influențează întreaga viață a unei persoane.”</p>
+          </div>
+        </div>
+
+        <div class="interlink-box">
+          <h4>Explorează rapid platforma</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('notiuni')">Vezi noțiunile de bază</button>
+            <button onclick="goToPage('buget')">Mergi la buget personal</button>
+            <button onclick="goToPage('calculator')">Încearcă calculatorul</button>
+            <button onclick="goToPage('quiz')">Rezolvă quiz-ul</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="despre" class="page">
+        <h2>Introducere în educația financiară</h2>
+        <p class="section-intro">Educația financiară reprezintă totalitatea cunoștințelor și abilităților care ne ajută să înțelegem cum funcționează banii și cum să luăm decizii corecte legate de utilizarea lor.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Ce înseamnă concret?</h3>
+            <p>Înseamnă să știm să ne organizăm veniturile, să nu cheltuim impulsiv, să economisim și să evităm riscurile inutile.</p>
+          </div>
+          <div class="card">
+            <h3>De ce începe de timpuriu?</h3>
+            <p>Adolescența este perioada în care se formează obiceiurile. Un tânăr care învață devreme aceste reguli va gestiona mai bine banii la maturitate.</p>
+          </div>
+          <div class="card">
+            <h3>Unde o folosim?</h3>
+            <p>În viața de zi cu zi: când cumpărăm ceva, când economisim, când planificăm o vacanță sau când luăm o decizie importantă legată de bani.</p>
+          </div>
+        </div>
+        <div class="highlight">
+          <strong>Idee esențială:</strong> educația financiară ne ajută să transformăm banii într-un instrument util, nu într-o sursă de stres.
+        </div>
+        <div class="interlink-box">
+          <h4>Continuă lectura</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('importanta')">De ce este importantă?</button>
+            <button onclick="goToPage('notiuni')">Noțiuni de bază</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="importanta" class="page">
+        <h2>Importanța educației financiare</h2>
+        <p class="section-intro">Într-o societate în care cumpărăturile, reclamele și tentațiile sunt peste tot, educația financiară devine o abilitate de bază pentru orice persoană.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Control asupra banilor</h3>
+            <p>Atunci când înțelegi cum îți cheltuiești banii, poți evita risipa și poți lua decizii mai inteligente.</p>
+          </div>
+          <div class="card">
+            <h3>Mai puține greșeli</h3>
+            <p>Educația financiară reduce riscul de a face datorii inutile sau de a fi influențat de oferte aparent avantajoase.</p>
+          </div>
+          <div class="card">
+            <h3>Obiective mai clare</h3>
+            <p>Un tânăr informat poate să economisească pentru telefon, cursuri, permis, facultate sau alte planuri importante.</p>
+          </div>
+          <div class="card">
+            <h3>Independență</h3>
+            <p>Persoana care își înțelege finanțele devine mai responsabilă și mai pregătită pentru viața de adult.</p>
+          </div>
+        </div>
+        <div class="table-box">
+          <table>
+            <thead>
+              <tr>
+                <th>Fără educație financiară</th>
+                <th>Cu educație financiară</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Cheltuieli impulsive</td>
+                <td>Decizii gândite și planificate</td>
+              </tr>
+              <tr>
+                <td>Lipsa economiilor</td>
+                <td>Obiceiul de a pune bani deoparte</td>
+              </tr>
+              <tr>
+                <td>Confuzie în privința bugetului</td>
+                <td>Organizare clară a veniturilor și cheltuielilor</td>
+              </tr>
+              <tr>
+                <td>Risc mai mare de datorii</td>
+                <td>Mai mult control și responsabilitate</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="interlink-box">
+          <h4>Vezi și</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('despre')">Înapoi la introducere</button>
+            <button onclick="goToPage('buget')">Cum faci un buget?</button>
+            <button onclick="goToPage('greseli')">Greșeli de evitat</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="notiuni" class="page">
+        <h2>Noțiuni financiare de bază</h2>
+        <p class="section-intro">Pentru a administra corect banii, trebuie înțelese câteva concepte simple, dar foarte importante.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Venituri</h3>
+            <p>Reprezintă banii obținuți din diferite surse: salariu, bursă, alocație, cadouri, premii sau activități personale.</p>
+          </div>
+          <div class="card">
+            <h3>Cheltuieli</h3>
+            <p>Sunt sumele folosite pentru nevoi și dorințe: mâncare, transport, haine, facturi, ieșiri sau divertisment.</p>
+          </div>
+          <div class="card">
+            <h3>Economii</h3>
+            <p>Reprezintă banii păstrați pentru viitor, pentru obiective importante sau pentru situații neprevăzute.</p>
+          </div>
+          <div class="card">
+            <h3>Buget personal</h3>
+            <p>Este planul prin care o persoană își împarte banii astfel încât să știe cât cheltuiește și cât economisește.</p>
+          </div>
+          <div class="card">
+            <h3>Nevoi</h3>
+            <p>Lucruri esențiale pentru trai: mâncare, igienă, locuință, transport sau educație.</p>
+          </div>
+          <div class="card">
+            <h3>Dorințe</h3>
+            <p>Lucruri pe care ni le dorim, dar fără de care putem trăi: gadgeturi noi, articole de lux sau cumpărături impulsive.</p>
+          </div>
+        </div>
+        <div class="interlink-box">
+          <h4>Legături utile</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('buget')">Aplică noțiunile în buget</button>
+            <button onclick="goToPage('economii')">Vezi cum economisești</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="buget" class="page">
+        <h2>Buget personal</h2>
+        <p class="section-intro">Bugetul personal este unul dintre cele mai importante instrumente financiare. El ne ajută să știm ce bani avem, pe ce îi cheltuim și cât putem economisi.</p>
+        <div class="two-columns">
+          <div class="card">
+            <h3>Pași pentru realizarea unui buget</h3>
+            <ul class="mini-list">
+              <li>1. Notează toate veniturile lunare.</li>
+              <li>2. Notează toate cheltuielile fixe și variabile.</li>
+              <li>3. Separă nevoile de dorințe.</li>
+              <li>4. Stabilește o sumă pentru economii.</li>
+              <li>5. Analizează la final de lună dacă ai respectat planul.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Exemplu de buget simplu</h3>
+            <ul class="mini-list">
+              <li>Venit lunar: 600 lei</li>
+              <li>Transport: 120 lei</li>
+              <li>Mâncare/ieșiri: 180 lei</li>
+              <li>Economii: 150 lei</li>
+              <li>Alte cheltuieli: 100 lei</li>
+              <li>Rezervă: 50 lei</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight">
+          <strong>Concluzie:</strong> un buget nu îți limitează libertatea, ci îți oferă control.
+        </div>
+        <div class="interlink-box">
+          <h4>Aplică mai departe</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('planner')">Deschide planner-ul</button>
+            <button onclick="goToPage('economii')">Vezi economiile</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="economii" class="page">
+        <h2>Economii și obiective financiare</h2>
+        <p class="section-intro">Economisirea este obiceiul prin care punem bani deoparte pentru viitor. Acest proces devine mai eficient atunci când este legat de obiective clare.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3>De ce economisim?</h3>
+            <p>Pentru siguranță, pentru obiective personale și pentru a evita stresul generat de cheltuieli neprevăzute.</p>
+          </div>
+          <div class="card">
+            <h3>Exemple de obiective</h3>
+            <p>Telefon nou, permis de conducere, cursuri, laptop, excursie sau fond de urgență.</p>
+          </div>
+          <div class="card">
+            <h3>Cum economisim mai ușor?</h3>
+            <p>Stabilim o sumă fixă lunară și o tratăm ca pe o prioritate, nu ca pe ceva opțional.</p>
+          </div>
+        </div>
+        <div class="timeline">
+          <h3>Regulă practică</h3>
+          <div class="timeline-step"><strong>Pe termen scurt:</strong> obiective de câteva săptămâni sau luni.</div>
+          <div class="timeline-step"><strong>Pe termen mediu:</strong> obiective de 6-12 luni.</div>
+          <div class="timeline-step"><strong>Pe termen lung:</strong> obiective mari, care cer disciplină și planificare.</div>
+        </div>
+        <div class="interlink-box">
+          <h4>Pașii următori</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('calculator')">Calculează economiile</button>
+            <button onclick="goToPage('planner')">Planifică bugetul</button>
+            <button onclick="goToPage('investitii')">Înțelege investițiile</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="investitii" class="page">
+        <h2>Investiții pe înțelesul tuturor</h2>
+        <p class="section-intro">Investiția înseamnă folosirea banilor pentru a obține, în timp, un câștig. Este important de înțeles că investițiile implică și risc, nu doar profit.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Economii vs investiții</h3>
+            <p>Economiile sunt mai sigure și se păstrează pentru obiective sau urgențe. Investițiile urmăresc creșterea banilor pe termen mai lung, dar pot varia.</p>
+          </div>
+          <div class="card">
+            <h3>Ce trebuie știut?</h3>
+            <p>Nu investim bani de care avem nevoie urgent. Înainte de orice, trebuie să existe disciplină și o bază solidă de educație financiară.</p>
+          </div>
+          <div class="card">
+            <h3>Primul pas real</h3>
+            <p>Pentru un tânăr, cea mai bună „investiție” inițială este în educație, abilități și dezvoltare personală.</p>
+          </div>
+        </div>
+        <div class="highlight">
+          <strong>Idee importantă:</strong> nu orice oportunitate care promite câștig rapid este o investiție bună.
+        </div>
+        <div class="interlink-box">
+          <h4>Înainte să mergi mai departe</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('economii')">Mai întâi: economii</button>
+            <button onclick="goToPage('faq')">Vezi întrebările frecvente</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="greseli" class="page">
+        <h2>Greșeli financiare frecvente</h2>
+        <p class="section-intro">Mulți tineri fac aceleași greșeli la început. Recunoașterea lor este primul pas pentru a le evita.</p>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Cheltuieli impulsive</h3>
+            <p>Cumpărături făcute pe moment, fără analiză, doar din dorință sau influență socială.</p>
+          </div>
+          <div class="card">
+            <h3>Lipsa unui plan</h3>
+            <p>Fără un buget, banii se consumă rapid și fără control clar.</p>
+          </div>
+          <div class="card">
+            <h3>Ignorarea economiilor</h3>
+            <p>Mulți cred că pot economisi doar sume mari, dar obiceiul contează mai mult decât valoarea.</p>
+          </div>
+          <div class="card">
+            <h3>Confundarea nevoilor cu dorințele</h3>
+            <p>Nu tot ce vrem trebuie cumpărat imediat.</p>
+          </div>
+          <div class="card">
+            <h3>Influența anturajului</h3>
+            <p>Unele cheltuieli sunt făcute doar pentru a impresiona, nu pentru că sunt utile.</p>
+          </div>
+          <div class="card">
+            <h3>Neinformarea</h3>
+            <p>Lipsa informației duce la decizii slabe și la pierderea controlului asupra banilor.</p>
+          </div>
+        </div>
+        <div class="interlink-box">
+          <h4>Recomandat după această secțiune</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('sfaturi')">Sfaturi utile</button>
+            <button onclick="goToPage('planner')">Testează bugetul</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="sfaturi" class="page">
+        <h2>Sfaturi utile pentru tineri</h2>
+        <p class="section-intro">Gestionarea bună a banilor nu începe cu sume mari, ci cu obiceiuri mici și constante.</p>
+        <div class="card-grid">
+          <div class="card"><h3>1. Fă un buget lunar</h3><p>Notează veniturile și cheltuielile pentru a avea control real asupra banilor tăi.</p></div>
+          <div class="card"><h3>2. Economisește constant</h3><p>Chiar și sumele mici devin importante dacă sunt puse deoparte regulat.</p></div>
+          <div class="card"><h3>3. Compară înainte să cumperi</h3><p>Analizează prețul, utilitatea și calitatea înainte de orice achiziție.</p></div>
+          <div class="card"><h3>4. Evită impulsul</h3><p>Așteaptă puțin înainte să faci o cumpărătură mare. Gândește la rece.</p></div>
+          <div class="card"><h3>5. Informează-te</h3><p>Citește și învață constant despre bani, economii și responsabilitate financiară.</p></div>
+          <div class="card"><h3>6. Gândește pe termen lung</h3><p>Deciziile bune de azi pot construi un viitor mai sigur mâine.</p></div>
+        </div>
+        <div class="interlink-box">
+          <h4>Pune în practică</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('calculator')">Calculează economiile</button>
+            <button onclick="goToPage('quiz')">Testează ce ai învățat</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="calculator" class="page">
+        <h2>Calculator de economii</h2>
+        <p class="section-intro">Acest instrument interactiv calculează suma totală economisită în funcție de valoarea pusă deoparte lunar și de numărul de luni.</p>
+        <div class="calculator">
+          <label for="monthly">Economii lunare (lei):</label>
+          <input type="number" id="monthly" placeholder="Ex: 200" />
+
+          <label for="months">Număr de luni:</label>
+          <input type="number" id="months" placeholder="Ex: 12" />
+
+          <button class="btn" onclick="calculateSavings()">Calculează</button>
+          <button class="btn btn-secondary" onclick="resetSavings()">Resetează</button>
+          <div id="result" class="result"></div>
+          <div class="progress-wrap">
+            <div class="progress-bar">
+              <div id="savingsProgress" class="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+        <div class="interlink-box">
+          <h4>Continuă cu</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('planner')">Planner de buget</button>
+            <button onclick="goToPage('economii')">Obiective financiare</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="planner" class="page">
+        <h2>Planner buget personal</h2>
+        <p class="section-intro">Planner-ul simulează un buget simplu. Introduci venitul și principalele categorii de cheltuieli, iar aplicația îți arată dacă rămâi cu bani sau dacă depășești bugetul.</p>
+        <div class="calculator">
+          <label for="income">Venit lunar (lei):</label>
+          <input type="number" id="income" placeholder="Ex: 1000" />
+
+          <label for="needs">Cheltuieli pentru nevoi (lei):</label>
+          <input type="number" id="needs" placeholder="Ex: 400" />
+
+          <label for="wants">Cheltuieli pentru dorințe (lei):</label>
+          <input type="number" id="wants" placeholder="Ex: 250" />
+
+          <label for="save">Economii planificate (lei):</label>
+          <input type="number" id="save" placeholder="Ex: 200" />
+
+          <button class="btn" onclick="analyzeBudget()">Analizează bugetul</button>
+          <div id="budgetResult" class="result"></div>
+        </div>
+      </section>
+
+      <section id="quiz" class="page">
+        <h2>Quiz financiar</h2>
+        <p class="section-intro">Quiz-ul verifică rapid dacă utilizatorul a înțeles informațiile prezentate pe site.</p>
+        <div class="quiz-box">
+          <label for="q1">1. Ce reprezintă economiile?</label>
+          <select id="q1">
+            <option value="">Alege varianta corectă</option>
+            <option value="0">Banii cheltuiți pe distracție</option>
+            <option value="1">Banii puși deoparte pentru viitor</option>
+            <option value="0">Un tip de datorie</option>
+          </select>
+
+          <label for="q2">2. Ce este bugetul personal?</label>
+          <select id="q2">
+            <option value="">Alege varianta corectă</option>
+            <option value="1">Un plan al veniturilor și cheltuielilor</option>
+            <option value="0">O listă de produse</option>
+            <option value="0">Doar suma de bani din portofel</option>
+          </select>
+
+          <label for="q3">3. Care este o decizie financiară bună?</label>
+          <select id="q3">
+            <option value="">Alege varianta corectă</option>
+            <option value="1">Să compari înainte să cumperi</option>
+            <option value="0">Să cheltuiești tot imediat</option>
+            <option value="0">Să nu îți notezi cheltuielile</option>
+          </select>
+
+          <button class="btn" onclick="checkQuiz()">Verifică răspunsurile</button>
+          <div id="quizResult" class="result"></div>
+        </div>
+        <div class="interlink-box">
+          <h4>Ce urmează?</h4>
+          <div class="interlink-links">
+            <button onclick="goToPage('faq')">Vezi FAQ</button>
+            <button onclick="goToPage('dashboard')">Înapoi la dashboard</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" class="page">
+        <h2>Întrebări frecvente</h2>
+        <p class="section-intro">Această secțiune rezumă pe scurt unele dintre cele mai comune întrebări pe care și le pun tinerii despre bani.</p>
+        <div class="faq-item">
+          <h3>Trebuie să am mulți bani ca să economisesc?</h3>
+          <p>Nu. Economisirea începe cu sume mici, dar regulate. Important este obiceiul.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Ce fac dacă cheltuiesc prea mult?</h3>
+          <p>Primul pas este să îți notezi cheltuielile și să vezi exact pe ce se duc banii.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Care este diferența dintre nevoie și dorință?</h3>
+          <p>Nevoia este esențială, dorința este opțională. Educația financiară te învață să le deosebești.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Este bine să investesc de la o vârstă mică?</h3>
+          <p>Înainte de orice investiție, este important să existe educație financiară, disciplină și o bază de economii.</p>
+        </div>
+      </section>
+
+      
+      <section id="contact" class="page">
+        <h2>Contact pentru mentorat</h2>
+        <p class="section-intro">Formularul de mai jos simulează contactarea unui mentor pentru sprijin și îndrumare în domeniul educației financiare.</p>
+        <div class="calculator">
+          <label for="name">Nume:</label>
+          <input type="text" id="name" placeholder="Ex: Popescu Andrei" />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" placeholder="Ex: andrei@email.com" />
+
+          <label for="message">Mesaj:</label>
+          <input type="text" id="message" placeholder="Ex: Aș dori ajutor pentru organizarea bugetului" />
+
+          <button class="btn" onclick="contactMentor()">Trimite cerere</button>
+          <div id="contactResult" class="result"></div>
+        </div>
+      </section>
+
+      <footer>
+        <p>Proiect realizat de Neculai Cosmin-Sebastian | Atestat - Educație Financiară pentru Tineri</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    function showPage(pageId, buttonElement) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => page.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+
+      const buttons = document.querySelectorAll('.menu button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      buttonElement.classList.add('active');
+    }
+
+    function goToPage(pageId) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => page.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+
+      const buttons = document.querySelectorAll('.menu button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      const buttonMap = {
+        dashboard: 0,
+        despre: 1,
+        importanta: 2,
+        notiuni: 3,
+        buget: 4,
+        economii: 5,
+        investitii: 6,
+        greseli: 7,
+        sfaturi: 8,
+        calculator: 9,
+        planner: 10,
+        quiz: 11,
+        faq: 12,
+        contact: 13
+      };
+      const index = buttonMap[pageId];
+      if (index !== undefined) buttons[index].classList.add('active');
+    }
+
+    function calculateSavings() {
+      const monthly = parseFloat(document.getElementById('monthly').value);
+      const months = parseInt(document.getElementById('months').value);
+      const result = document.getElementById('result');
+      const progress = document.getElementById('savingsProgress');
+
+      if (isNaN(monthly) || isNaN(months) || monthly < 0 || months < 0) {
+        result.textContent = 'Te rog introdu valori valide.';
+        progress.style.width = '0%';
+        return;
+      }
+
+      const total = monthly * months;
+      result.textContent = `În ${months} luni vei economisi ${total.toFixed(2)} lei.`;
+
+      let percent = total / 50;
+      if (percent > 100) percent = 100;
+      progress.style.width = percent + '%';
+    }
+
+    function resetSavings() {
+      document.getElementById('monthly').value = '';
+      document.getElementById('months').value = '';
+      document.getElementById('result').textContent = '';
+      document.getElementById('savingsProgress').style.width = '0%';
+    }
+
+    function analyzeBudget() {
+      const income = parseFloat(document.getElementById('income').value);
+      const needs = parseFloat(document.getElementById('needs').value);
+      const wants = parseFloat(document.getElementById('wants').value);
+      const save = parseFloat(document.getElementById('save').value);
+      const result = document.getElementById('budgetResult');
+
+      if ([income, needs, wants, save].some(v => isNaN(v) || v < 0)) {
+        result.textContent = 'Te rog completează toate câmpurile cu valori valide.';
+        return;
+      }
+
+      const remaining = income - needs - wants - save;
+
+      if (remaining > 0) {
+        result.textContent = `Buget echilibrat. Îți mai rămân ${remaining.toFixed(2)} lei.`;
+      } else if (remaining === 0) {
+        result.textContent = 'Bugetul este exact echilibrat. Nu îți mai rămân bani la final.';
+      } else {
+        result.textContent = `Ai depășit bugetul cu ${Math.abs(remaining).toFixed(2)} lei.`;
+      }
+    }
+
+    function checkQuiz() {
+      const q1 = parseInt(document.getElementById('q1').value || 0);
+      const q2 = parseInt(document.getElementById('q2').value || 0);
+      const q3 = parseInt(document.getElementById('q3').value || 0);
+      const result = document.getElementById('quizResult');
+
+      if (
+        document.getElementById('q1').value === '' ||
+        document.getElementById('q2').value === '' ||
+        document.getElementById('q3').value === ''
+      ) {
+        result.textContent = 'Te rog răspunde la toate întrebările.';
+        return;
+      }
+
+      const total = q1 + q2 + q3;
+      let message = `Ai obținut ${total} din 3 puncte.`;
+
+      if (total === 3) {
+        message += ' Excelent! Ai înțeles foarte bine noțiunile de bază.';
+      } else if (total === 2) {
+        message += ' Foarte bine! Mai poți repeta câteva concepte.';
+      } else {
+        message += ' Recitește informațiile și încearcă din nou.';
+      }
+
+      result.textContent = message;
+    }
+
+    function contactMentor() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const result = document.getElementById('contactResult');
+
+      if (!name || !email || !message) {
+        result.textContent = 'Completează toate câmpurile.';
+        return;
+      }
+
+      result.textContent = `Mulțumim, ${name}! Cererea ta a fost trimisă. Vei fi contactat pe adresa ${email}.`;
+    }
+  </script>
+</body>
+</html>
